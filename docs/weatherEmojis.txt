@@ -1,0 +1,57 @@
+// Contains SF symbols
+
+{
+"weatherEmoji": {
+	//**daytime
+		//all cloud types
+			"few clouds": "cloud.sun.fill",
+			"scattered clouds": "cloud.sun.fill",
+			"broken clouds": "cloud.fill",
+			"overcast clouds": "smoke.fill",
+		//variance weather
+		"clear": "sun.max.fill",
+		"shower rain": "cloud.rain.fill",
+		"rain": "cloud.heavyrain.fill",
+		"thunderstorm": "cloud.bolt.rain.fill",
+		"snow": "snowflake",
+		"drizzle": "cloud.drizzle.fill",
+		
+		//extra weather
+		"mist": "cloud.fog.fill",
+		"smoke": "eye.trianglebadge.exclamationmark.fill",
+		"haze": "sun.haze.fill",
+		"dust": "sun.dust.fill",
+		"fog": "cloud.fog.fill",
+		"sand": "allergens", //fix
+		"dust": "allergens", //fix
+		"ash": "flame.circle.fill",
+		"squall": "wind", //fix
+		"tornado": "tornado", //fix for day/night
+		
+	//**nighttime
+			//all cloud types
+			"few cloudsN": "cloud.moon",
+			"scattered cloudsN": "cloud.moon",
+			"broken cloudsN": "cloud",
+			"overcast cloudsN": "smoke",
+		//variance weather
+		"clearN": "moon.stars",
+		"shower rainN": "cloud.rain",
+		"rainN": "cloud.heavyrain",
+		"thunderstormN": "cloud.bolt.rain",
+		"snowN": "snowflake",
+		"drizzleN": "cloud.drizzle",
+		
+		//extra weather
+		"mistN": "cloud.fog",
+		"smokeN": "eye.trianglebadge.exclamationmark",
+		"hazeN": "sun.haze",
+		"dustN": "sun.dust",
+		"fogN": "cloud.fog",
+		"sandN": "allergens", 
+		"dustN": "allergens",
+		"ashN": "flame.circle",
+		"squallN": "wind",
+		"tornadoN": "tornado", 
+	}
+}
