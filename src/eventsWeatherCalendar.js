@@ -10,7 +10,6 @@ const fm = FileManager.iCloud();
 const folderPath = fm.documentsDirectory() + "/EventWeatherWidget";
 const visibility = false;
 
-
 // Get location parameters (must manually update location by running /getLocationInfo)
 const locationFilePath = fm.joinPath(folderPath, "locationInfo.txt");
 const locationJSON = JSON.parse(fm.readString(locationFilePath))
@@ -24,21 +23,19 @@ if (city_name == null) {
 }
 
 //configure OpenWeatherMap API Link
-const apiKey = "[INSERT_KEY]";
-//const lat = locationJSON.latitude;
-//const long = locationJSON.longitude;
+const apiKey = "INSERT_KEY";
+const lat = locationJSON.latitude;
+const lon = locationJSON.longitude;
 		
-//let apiLink = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKey}`;
+let apiLink = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKey}`;
 
-const weatherPath = fm.joinPath(fm.documentsDirectory() + "/EventWeatherWidget", "test.txt");
 const emojiPath = fm.joinPath(fm.documentsDirectory() + "/EventWeatherWidget", "weatherIcons.txt");
 
-let weatherJSON = JSON.parse(fm.readString(weatherPath));
 let weatherEmoji = JSON.parse(fm.readString(emojiPath));
 	
 //get weather information
-//let Requests = new Request(apiLink);
-//let weatherJSON = await Requests.loadJSON();
+let Requests = new Request(apiLink);
+let weatherJSON = await Requests.loadJSON();
 	
 const weather_results_array = testMode("off");
 	
