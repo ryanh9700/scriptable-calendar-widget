@@ -30,12 +30,15 @@ const lon = locationJSON.longitude;
 let apiLink = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKey}`;
 
 const emojiPath = fm.joinPath(fm.documentsDirectory() + "/EventWeatherWidget", "weatherIcons.txt");
-
 let weatherEmoji = JSON.parse(fm.readString(emojiPath));
 	
 //get weather information
 let Requests = new Request(apiLink);
 let weatherJSON = await Requests.loadJSON();
+
+// Read from WeatherJSON.txt, test file
+//const weatherJSON = JSON.parse(fm.readString(folderPath + "/WeatherJSON.txt"));
+//QuickLook.present(weatherJSON);
 	
 const weather_results_array = testMode("off");
 	
@@ -763,14 +766,14 @@ function testMode (input) {
 		current_humidity = Math.round(today.main.humidity);
 		
 		//FIX TO NEXT LIST VALUE
-		//get next hour temperature SFSymbol and color
-		const nextHour_temp = weatherJSON.list[0].main.temp;
+		//get next temperature SFSymbol and color
+		const next_temp = weatherJSON.list[1].main.temp;
 	
-			if (nextHour_temp > current_temp) {
+			if (next_temp > current_temp) {
 				next_hour_temp_icon = "arrowtriangle.down.fill";
 				next_hour_temp_color = "blue";
 
-			} else if (current_temp === nextHour_temp) {
+			} else if (current_temp === next_temp) {
 				next_hour_temp_icon = "minus";
 				next_hour_temp_color = "98ffcb";
 			} 
@@ -788,7 +791,6 @@ function testMode (input) {
 			let sunriseTodayMS = weatherJSON.city.sunrise * 1000; //in ms; today
 			
 			// FIX FOR TOMROW
-			let sunriseTomoMS = weatherJSON.city.sunrise * 1000; //in ms; tomorrow
 			let currentMS = current_date.getTime();
 			
 				//check if it's currently nighttime
@@ -802,7 +804,7 @@ function testMode (input) {
 					//console.log("nighttime");
 					weatherTypeEmojiColor = "white";
 					current_weather_description = current_weather_description + "N";
-					weatherTypeEmoji = weatherEmoji[current_weather_description];
+		
 				}
 	} //end if
 	
