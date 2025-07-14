@@ -1,7 +1,3 @@
-// Variables used by Scriptable.
-// These must be at the very top of the file. Do not edit.
-// always-run-in-app: true; icon-color: pink;
-// icon-glyph: magic;
 
 const scriptName = Script.name();
 const current_date = new Date();
@@ -23,7 +19,7 @@ if (city_name == null) {
 }
 
 //configure OpenWeatherMap API Link
-const apiKey = "INSERT_KEY";
+const apiKey = "[api]";
 const lat = locationJSON.latitude;
 const lon = locationJSON.longitude;
 		
@@ -115,17 +111,13 @@ let location_title = widget.addStack();
 	location_title.setPadding(10,0,0,0);
 	location_title.url = "scriptable:///run/getLocation";
 	createTextRow("none", location_title,`${city_name}`,"white", Font.boldRoundedSystemFont(22), 1, visibility, "red");
-// 	let test = createTextRow("none", location_title,`Winchester-on-the-Severn`,"white", Font.boldRoundedSystemFont(22), 1, visibility, "red");
-// 		test.minimumScaleFactor = .6
-
 
 //LEFT - "[State/Province Name] | [Country ISO Code]"
 let state_title = widget.addStack();
 	createTextRow("none", state_title, `${region_name}`, "white", Font.boldRoundedSystemFont(18), 1, visibility, "blue");
 	createTextRow("none", state_title, `${country_iso}`, "orange", Font.boldRoundedSystemFont(18), 1, visibility, "blue");
 
-//createTextRow(side, stack, text, textColor, font, lineLimitInput, visibility, visColor, textOp)
-//createImageRow(side, stack, sfName, imageColor, imgSize, font, visibility, visColor)
+
 //Left side - add spacer after text
 //Right side - add spacer before text
 let main_column = widget.addStack();
@@ -141,7 +133,7 @@ let main_column = widget.addStack();
 		//create left, right titles
 			//LEFT - "[Day], [Date]\n[blank space]"
 			let left_location_title = left_row.addStack();
-					left_location_title.size = new Size(0,115); //115
+					left_location_title.size = new Size(0,56); //115
 					left_location_title.setPadding(3,0,0,0);
 					left_location_title.url = "scriptable:///run/getWidgetImage";
 					
@@ -149,13 +141,80 @@ let main_column = widget.addStack();
 					df.dateFormat = "EEEE"
 					currentDay = df.string(current_date);
 					let dayTitle_text = createTextRow("none", left_location_title, currentDay, "orange", Font.semiboldMonospacedSystemFont(15), 0, visibility, "red");
-						//dayTitle_text.shadowRadius = 0;
 						
 						df.dateFormat = ", MMM d";
 						currentMonthAndDate = df.string(current_date);
 					let dateTitle_text = createTextRow("left", left_location_title, currentMonthAndDate, "white", Font.lightMonospacedSystemFont(15), 0, visibility, "red");
-							//dateTitle_text.shadowRadius = 0;
+					
+		//metro lol
+				let colParkStack = left_row.addStack();
+				colParkStack.size = new Size(0,30);
+				
+				let navyYardStack = left_row.addStack();
+				navyYardStack.size = new Size(0,30);
+				
+				let balls = new Request("https://api.wmata.com/StationPrediction.svc/json/GetPrediction/E09,F05");
+					balls.method = "GET";
+					balls.headers = {
+						"api_key": "[api]",
+						"Cache-Control": "No-Cache"
+					};
 
+					let temp = await balls.loadJSON();
+					let stationValid = false;
+					let stationMin = "CLSD";
+					let stationIcon = "tram.circle";
+					let stationStatus = "green";
+					let stationDestination2Letter;
+				
+					// E09 College Park, F05 Navy Yard
+					function getTrainsInfo(json, stationCode, destinationName) {
+						for (let i = 0; i < json.Trains.length; i++) {
+							let currStation = json.Trains[i];
+						
+							// Station to Destination
+							if (currStation.LocationCode === stationCode && 
+								currStation.DestinationName === destinationName) {
+									stationValid = true;
+									
+									stationDestination2Letter = destinationName.substring(0,2);
+									stationMin = currStation.Min;
+									
+									// Check how many minutes, otherwise train is ARR or BRD
+									if (Number.isInteger(parseInt(stationMin))) {
+										stationMin += "m";
+									
+									} else {
+										stationIcon = "tram.circle.fill";
+									}
+									
+									break;
+							}
+						
+						}
+						
+						// If either is valid, set Red status
+						if (!stationValid) {
+							stationIcon = "tram.circle.fill";
+							stationStatus = "red";
+							
+							return false;
+						}
+					
+					}
+					//Navy Yard-Ballpark F05, clgpark E09
+					
+						
+				
+				// College Park
+				getTrainsInfo(temp, "E09", "Branch Ave");
+				createImageRow("none", colParkStack, stationIcon, stationStatus, new Size(20, 20), weatherInfoFont, visibility, "blue");
+				collegeParkInfo = createTextRow("left", colParkStack, " Clg Prk: " + stationMin + " | " +stationDestination2Letter, "white", Font.lightMonospacedSystemFont(15), 0, visibility, "red");
+			
+				// Navy-Yard
+				getTrainsInfo(temp, "F05", "Greenbelt");
+				createImageRow("none", navyYardStack, stationIcon, stationStatus, new Size(20, 20), weatherInfoFont, visibility, "blue");
+				navyYardInfo = createTextRow("left", navyYardStack, " Nvy Yrd: " + stationMin + " | " +stationDestination2Letter, "white", Font.lightMonospacedSystemFont(15), 0, visibility, "red")
 
 // 			//LEFT - "{SFSymbol Calendar} Events"
 				//MOVED TO FOR LOOP OF EVENTS
@@ -204,7 +263,7 @@ let main_column = widget.addStack();
 				const current_time = df.string(current_date);
 				
 				let right_weather_lastUpdated_text = createTextRow("right", right_weather_lastUpdated, `${current_time}  `, "white", Font.lightRoundedSystemFont(11), 1, visibility, "green", .1);	
-		right_weather_lastUpdated_text.textOpacity = .2;
+		right_weather_lastUpdated_text.textOpacity = .4;
 
 				let right_weather_lastUpdated_image = createImageRow("none", right_weather_lastUpdated, "alarm", "orange", new Size(12,12), Font.lightRoundedSystemFont(11), visibility, "blue");	
 			right_weather_lastUpdated_image.imageOpacity = .2;
