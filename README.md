@@ -1,6 +1,6 @@
 # Scriptable Widget
 
-iOS widget that displays upcoming events, and weather. 
+iOS widget that displays upcoming events and current weather. 
 
 ### How to Use
 1. Download "Scriptable" from the App Store
@@ -13,6 +13,11 @@ iOS widget that displays upcoming events, and weather.
 8. Take a screenshot then run getWidgeImage to select photo
 9. Add large Scriptable widget to homescreen
 10. Long hold and press "Edit 'Scriptable'" and add main widget
+
+11. Create an API Key on WMATA's website and replace within the code. To configure the stations you want, you can find the station codes online and modify the request URL.
+
+### Important
+Go to Files app and navigate to the Scriptable folder. Ensure all .js and .txt files have the "Keep Downloaded" setting turned on.
 
 ### Other Functionality
 1. Press city name to automatically run getLocation to update location and weather
