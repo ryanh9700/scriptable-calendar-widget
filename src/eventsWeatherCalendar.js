@@ -19,7 +19,7 @@ if (city_name == null) {
 }
 
 //configure OpenWeatherMap API Link
-const apiKey = "[api]";
+const apiKey = "KEY";
 const lat = locationJSON.latitude;
 const lon = locationJSON.longitude;
 		
@@ -31,10 +31,6 @@ let weatherEmoji = JSON.parse(fm.readString(emojiPath));
 //get weather information
 let Requests = new Request(apiLink);
 let weatherJSON = await Requests.loadJSON();
-
-// Read from WeatherJSON.txt, test file
-//const weatherJSON = JSON.parse(fm.readString(folderPath + "/WeatherJSON.txt"));
-//QuickLook.present(weatherJSON);
 	
 const weather_results_array = testMode("off");
 	
@@ -156,19 +152,24 @@ let main_column = widget.addStack();
 				let balls = new Request("https://api.wmata.com/StationPrediction.svc/json/GetPrediction/E09,F05");
 					balls.method = "GET";
 					balls.headers = {
-						"api_key": "[api]",
+						"api_key": "KEY",
 						"Cache-Control": "No-Cache"
 					};
 
 					let temp = await balls.loadJSON();
-					let stationValid = false;
-					let stationMin = "CLSD";
-					let stationIcon = "tram.circle";
-					let stationStatus = "green";
+					let stationValid;
+					let stationMin;
+					let stationIcon;
+					let stationStatus;
 					let stationDestination2Letter;
 				
 					// E09 College Park, F05 Navy Yard
 					function getTrainsInfo(json, stationCode, destinationName) {
+						stationValid = false;
+						stationMin = "CLSD";
+						stationIcon = "tram.circle";
+						stationStatus = "green";
+						
 						for (let i = 0; i < json.Trains.length; i++) {
 							let currStation = json.Trains[i];
 						
@@ -182,10 +183,11 @@ let main_column = widget.addStack();
 									
 									// Check how many minutes, otherwise train is ARR or BRD
 									if (Number.isInteger(parseInt(stationMin))) {
-										stationMin += "m";
+										stationMin += "m" + " | " +stationDestination2Letter;
 									
 									} else {
-										stationIcon = "tram.circle.fill";
+											stationIcon = "figure.walk";
+											stationStatus = "yellow";
 									}
 									
 									break;
@@ -198,7 +200,6 @@ let main_column = widget.addStack();
 							stationIcon = "tram.circle.fill";
 							stationStatus = "red";
 							
-							return false;
 						}
 					
 					}
@@ -209,12 +210,12 @@ let main_column = widget.addStack();
 				// College Park
 				getTrainsInfo(temp, "E09", "Branch Ave");
 				createImageRow("none", colParkStack, stationIcon, stationStatus, new Size(20, 20), weatherInfoFont, visibility, "blue");
-				collegeParkInfo = createTextRow("left", colParkStack, " Clg Prk: " + stationMin + " | " +stationDestination2Letter, "white", Font.lightMonospacedSystemFont(15), 0, visibility, "red");
+				collegeParkInfo = createTextRow("left", colParkStack, " Clg Prk: " + stationMin, "white", Font.lightMonospacedSystemFont(15), 0, visibility, "red");
 			
 				// Navy-Yard
 				getTrainsInfo(temp, "F05", "Greenbelt");
 				createImageRow("none", navyYardStack, stationIcon, stationStatus, new Size(20, 20), weatherInfoFont, visibility, "blue");
-				navyYardInfo = createTextRow("left", navyYardStack, " Nvy Yrd: " + stationMin + " | " +stationDestination2Letter, "white", Font.lightMonospacedSystemFont(15), 0, visibility, "red")
+				navyYardInfo = createTextRow("left", navyYardStack, " Nvy Yrd: " + stationMin, "white", Font.lightMonospacedSystemFont(15), 0, visibility, "red")
 
 // 			//LEFT - "{SFSymbol Calendar} Events"
 				//MOVED TO FOR LOOP OF EVENTS
@@ -263,10 +264,10 @@ let main_column = widget.addStack();
 				const current_time = df.string(current_date);
 				
 				let right_weather_lastUpdated_text = createTextRow("right", right_weather_lastUpdated, `${current_time}  `, "white", Font.lightRoundedSystemFont(11), 1, visibility, "green", .1);	
-		right_weather_lastUpdated_text.textOpacity = .4;
+		right_weather_lastUpdated_text.textOpacity = .5;
 
 				let right_weather_lastUpdated_image = createImageRow("none", right_weather_lastUpdated, "alarm", "orange", new Size(12,12), Font.lightRoundedSystemFont(11), visibility, "blue");	
-			right_weather_lastUpdated_image.imageOpacity = .2;
+			right_weather_lastUpdated_image.imageOpacity = .5;
 					
 				
 //*********Lower Events Portion********
